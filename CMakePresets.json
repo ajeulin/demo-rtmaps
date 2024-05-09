@@ -1,0 +1,126 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 27,
+      "patch": 0
+  },
+  "configurePresets": [
+      {
+          "name": "ninja-multi-vcpkg",
+          "displayName": "Ninja Multi-Config",
+          "description": "Configure with vcpkg toolchain and generate Ninja project files for all configurations",
+          "binaryDir": "${sourceDir}/build",
+          "generator": "Ninja Multi-Config",
+          "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      },
+      {
+        "name": "default",
+        "displayName": "Construction par défaut",
+        "description": "préréglage pour une construction par défaut avec Unix Makefiles",
+        "binaryDir": "${sourceDir}/build",
+        "generator": "Unix Makefiles",
+        "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "BUILD_SHARED_LIBS": "OFF",
+        "CMAKE_CXX_STANDARD": "20"
+      }
+     },
+      {
+        "name": "x64-windows",
+        "displayName": "Windows x64",
+        "description": "Configure with Visual Studio 17 2022 on Windows",
+        "generator": "Visual Studio 17 2022",
+        "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "binaryDir": "${sourceDir}/build",
+        "architecture": {
+          "value": "x64",
+          "strategy": "external"
+        },
+        "cacheVariables": {
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE",
+          "CMAKE_SYSTEM_VERSION": "11.0"
+        }
+      }
+  ],
+  "buildPresets": [
+      {
+          "name": "ninja-vcpkg-debug",
+          "configurePreset": "ninja-multi-vcpkg",
+          "displayName": "Build (Debug)",
+          "description": "Build with Ninja/vcpkg (Debug)",
+          "configuration": "Debug"
+      },
+      {
+          "name": "ninja-vcpkg-release",
+          "configurePreset": "ninja-multi-vcpkg",
+          "displayName": "Build (Release)",
+          "description": "Build with Ninja/vcpkg (Release)",
+          "configuration": "Release"
+      },
+      {
+          "name": "ninja-vcpkg",
+          "configurePreset": "ninja-multi-vcpkg",
+          "displayName": "Build",
+          "description": "Build with Ninja/vcpkg"
+      },
+      {
+        "name": "default",
+        "configurePreset": "default",
+        "jobs": 12  
+      },
+      {
+        "name": "build-windows",
+        "configurePreset": "x64-windows",
+        "configuration": "Release",
+        "jobs": 22
+      }
+  ],
+  "testPresets": [
+      {
+          "name": "test-ninja-vcpkg",
+          "configurePreset": "ninja-multi-vcpkg",
+          "hidden": true
+      },
+      {
+          "name": "test-debug",
+          "description": "Test (Debug)",
+          "displayName": "Test (Debug)",
+          "configuration": "Debug",
+          "inherits": [
+            "test-ninja-vcpkg"
+          ]
+        },
+        {
+          "name": "test-release",
+          "description": "Test (Release)",
+          "displayName": "Test (Release)",
+          "configuration": "Release",
+          "inherits": [
+            "test-ninja-vcpkg"
+          ]
+        },
+        {
+          "name": "run-all-tests",
+        "description": "Test (Debug)",
+        "displayName": "Test (Debug)",
+        "configuration": "Debug",
+        "configurePreset": "default",
+        "output": {
+          "outputOnFailure": true
+        }
+      },
+      {
+        "name": "test-windows",
+        "description": "Test (Release)",
+        "displayName": "Test (Release)",
+        "configurePreset": "x64-windows",
+        "output": {
+          "outputOnFailure": true
+        }
+      }
+    ]
+  }

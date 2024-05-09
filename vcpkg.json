@@ -1,0 +1,11 @@
+{
+    "name": "demo-project",
+    "version-string": "0.0.1",
+    "dependencies": [
+      "gtest",
+      "tinyxml2",
+      "opencv2",
+      "glog"
+    ]
+
+}
